@@ -1,44 +1,45 @@
-<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Frameset//EN">
-<html>
-<head>
-<meta http-equiv="Content-Type" content="text/html; charset=MacRoman">
-<title>SimpleSymbols.php</title>
-</head>
-<body>
-	<p>Using the PHP language, have the function SimpleSymbols(str) take the str parameter being passed and determine if it is an acceptable sequence by either returning the string true or false. The str parameter will be composed of + and = symbols with several letters between them (ie. ++d+===+c++==a) and for the string to be true each letter must be surrounded by a + symbol. So the string to the left would be false. The string will not be empty and will have at least one letter. </p>
-    <?php
-	
-		//First test vector
-		$str = "++d+53+c+";
-		//Execute the function using the first test vector
-		echo "For the string '" . $str . "', the result is " .  SimpleSymbols($str) . "</br>";
-	
-		//Second test vector
-		$str2 = "f++d+";
-		echo "For the string '" . $str2 . "', the result is " .  SimpleSymbols($str2) . "</br>";
-
-		function SimpleSymbols($str) {
-		
-			//Create a flag variable. Initially set to "FALSE"
-			$flag = "FALSE";
-		
-			//Check to see if the first character is a letter. If it is, return false ($flag variable).
-			if (!preg_match('/^[a-zA-Z]/', $str)) {
-				//Check to see if the last character is a letter. If it is, return false ($flag variable).
-				if(!preg_match('/[a-zA-Z]+$/', $str)) {
-					//Check to see if all letters found have a "+" sign before, and after it.
-					if(preg_match_all("/.{1,1}[a-z].{1,1}/", $str, $matches)){
-						//When the sequence is verified to be correct, change the flag to true ($flag variable).
-						$flag = "TRUE";
-					}
-				}
+<?php
+	function SimpleSymbols ($str) {
+	  
+	  //Initialize a boolean flag variable
+	  $flag = "false";
+	  
+	  //Check to see if the first character is a letter. If it is, return false ($flag variable)
+	  if (!preg_match('/^[a-zA-Z]/', $str)) {
+		//Check to see if the last character is a letter. If it is, return false ($flag variable).
+		if(!preg_match('/[a-zA-Z]+$/', $str)) {    
+		  //Find all the letters in the string
+			preg_match_all('/[A-Za-z]/', $str, $letters);
+			//For all letters found, verify that the charafter before and   after it is "+"
+		  for($i=0; $i<=(count($letters[0])-1); $i++){
+			$pos = strpos($str, $letters[0][$i]);
+			if (($str[$pos - 1] == "+") And ($str[$pos + 1] == "+")) {
+			//Return "true" if the pattern is matched for the alphabet found
+			  $flag = "true";
+			}  
+			else {
+			  $flag = "false";
+			  //Break the loop if there is no "+" before the alphabet or after it.
+			  break;
 			}
-		
-			//Return the correct value. If the sequence is correct, returns "TRUE" otherwise "FALSE"
-			return $flag;
-   
-  	}
+		  }
+		}
+	  }
+	  
+	  //Store the flag into $str as per specification
+	  $str = $flag;
+	  
+	  //Return the final boolean value
+	  return $str;
+	  
+	}
 
+	//Store all test vectors in an array
+	$vectors = array("+d+=3=+s+","f++d+");
+	  
+	//Execute the test vectors using the function
+	foreach ($vectors as $vector) {
+		echo "Test Vector: '". $vector . "':" . "</br>";
+		echo "Output:" . " " . SimpleSymbols($vector). "</br>";
+	}
 ?>
-    </body>
-</html>

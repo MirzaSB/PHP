@@ -46,11 +46,15 @@ function MeanMode($arr) {
     //Sort the new temp array in high to low order while maintaining index association.
     arsort($arrTemp, 2);
 
+    //Create a for loop...
     foreach ($arrTemp as $x => $x_value) {
+        //Accounting for all unique values in the array.
         if ($x_value > 1) {
+            //Store the value that is occurring the most times in the array.
             $mode = $x;
         }
         else {
+            //Otherwise, give a 0 value.
             $mode = 0;
         }
         break;
